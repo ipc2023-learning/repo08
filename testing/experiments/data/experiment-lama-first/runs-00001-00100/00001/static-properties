@@ -1,0 +1,11 @@
+{
+  "algorithm": "lama_first",
+  "domain": "blocks_4_clear",
+  "id": [
+    "lama_first",
+    "blocks_4_clear",
+    "p-200-0.pddl"
+  ],
+  "problem": "p-200-0.pddl",
+  "run_dir": "runs-00001-00100/00001"
+}

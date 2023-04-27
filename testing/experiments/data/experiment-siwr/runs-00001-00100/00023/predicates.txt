@@ -1,0 +1,2 @@
+visited 1
+at-robot 1

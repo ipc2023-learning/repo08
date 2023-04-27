@@ -1,0 +1,11 @@
+{
+  "algorithm": "lama_first",
+  "domain": "reward",
+  "id": [
+    "lama_first",
+    "reward",
+    "instance_60x60_0.pddl"
+  ],
+  "problem": "instance_60x60_0.pddl",
+  "run_dir": "runs-00001-00100/00006"
+}

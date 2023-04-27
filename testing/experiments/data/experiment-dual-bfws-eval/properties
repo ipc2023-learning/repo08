@@ -1,0 +1,138 @@
+{
+  "dual_bfws-blocks_4_clear-p-200-0.pddl": {
+    "algorithm": "dual_bfws",
+    "coverage": 0,
+    "domain": "blocks_4_clear",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "blocks_4_clear",
+      "p-200-0.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 10.5,
+    "problem": "p-200-0.pddl",
+    "run_dir": "runs-00001-00100/00001"
+  },
+  "dual_bfws-blocks_4_on-p-200-0.pddl": {
+    "algorithm": "dual_bfws",
+    "coverage": 0,
+    "domain": "blocks_4_on",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "blocks_4_on",
+      "p-200-0.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 10.53,
+    "problem": "p-200-0.pddl",
+    "run_dir": "runs-00001-00100/00002"
+  },
+  "dual_bfws-delivery-instance_20_25_40_0.pddl": {
+    "algorithm": "dual_bfws",
+    "coverage": 0,
+    "domain": "delivery",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "delivery",
+      "instance_20_25_40_0.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 10.49,
+    "problem": "instance_20_25_40_0.pddl",
+    "run_dir": "runs-00001-00100/00003"
+  },
+  "dual_bfws-gripper-p01.pddl": {
+    "algorithm": "dual_bfws",
+    "cost": 79,
+    "coverage": 1,
+    "domain": "gripper",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "gripper",
+      "p01.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 0.49,
+    "problem": "p01.pddl",
+    "run_dir": "runs-00001-00100/00004",
+    "total_time": 0.48
+  },
+  "dual_bfws-miconic-p01.pddl": {
+    "algorithm": "dual_bfws",
+    "cost": 73,
+    "coverage": 1,
+    "domain": "miconic",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "miconic",
+      "p01.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 0.47,
+    "problem": "p01.pddl",
+    "run_dir": "runs-00001-00100/00005",
+    "total_time": 0.45
+  },
+  "dual_bfws-reward-instance_60x60_0.pddl": {
+    "algorithm": "dual_bfws",
+    "cost": 411,
+    "coverage": 1,
+    "domain": "reward",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "reward",
+      "instance_60x60_0.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 4.82,
+    "problem": "instance_60x60_0.pddl",
+    "run_dir": "runs-00001-00100/00006",
+    "total_time": 4.62
+  },
+  "dual_bfws-spanner-pfile01-001.pddl": {
+    "algorithm": "dual_bfws",
+    "coverage": 0,
+    "domain": "spanner",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "spanner",
+      "pfile01-001.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 10.44,
+    "problem": "pfile01-001.pddl",
+    "run_dir": "runs-00001-00100/00007"
+  },
+  "dual_bfws-visitall-p01.pddl": {
+    "algorithm": "dual_bfws",
+    "cost": 45,
+    "coverage": 1,
+    "domain": "visitall",
+    "error": "none",
+    "id": [
+      "dual_bfws",
+      "visitall",
+      "p01.pddl"
+    ],
+    "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+    "planner_exit_code": 0,
+    "planner_wall_clock_time": 0.47,
+    "problem": "p01.pddl",
+    "run_dir": "runs-00001-00100/00008",
+    "total_time": 0.45
+  }
+}

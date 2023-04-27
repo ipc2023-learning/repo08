@@ -1,0 +1,11 @@
+{
+  "algorithm": "siwr_2",
+  "domain": "blocks_4_clear",
+  "id": [
+    "siwr_2",
+    "blocks_4_clear",
+    "p-200-0.pddl"
+  ],
+  "problem": "p-200-0.pddl",
+  "run_dir": "runs-00001-00100/00003"
+}

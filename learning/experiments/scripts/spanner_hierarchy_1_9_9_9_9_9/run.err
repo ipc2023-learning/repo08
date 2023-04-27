@@ -1,0 +1,28 @@
+Oversubscription: #Threads=32 exceeds logical CPUs=16.
+Oversubscription: #Threads=32 exceeds logical CPUs=16.
+Oversubscription: #Threads=32 exceeds logical CPUs=16.
+Oversubscription: #Threads=32 exceeds logical CPUs=16.
+Traceback (most recent call last):
+  File "./../../learner/main.py", line 12, in <module>
+    runner.run()
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/util/runner.py", line 87, in run
+    do( Path(args.domain).resolve(),
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/util/runner.py", line 82, in do
+    experiment.run()
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/driver.py", line 166, in run
+    run_and_check_output(step, stepnum, SubprocessStepRunner)
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/driver.py", line 175, in run_and_check_output
+    exitcode = runner.run(config=Bunch(step.config))
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/driver.py", line 108, in run
+    exitcode = self._run(config)
+  File "/home/dominik/projects/code/h-policy-learner/learning/learner/src/driver.py", line 141, in _run
+    exitcode = result.get()
+  File "/home/dominik/miniconda3/lib/python3.8/multiprocessing/pool.py", line 765, in get
+    self.wait(timeout)
+  File "/home/dominik/miniconda3/lib/python3.8/multiprocessing/pool.py", line 762, in wait
+    self._event.wait(timeout)
+  File "/home/dominik/miniconda3/lib/python3.8/threading.py", line 558, in wait
+    signaled = self._cond.wait(timeout)
+  File "/home/dominik/miniconda3/lib/python3.8/threading.py", line 302, in wait
+    waiter.acquire()
+KeyboardInterrupt

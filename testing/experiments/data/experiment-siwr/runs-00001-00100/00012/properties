@@ -1,0 +1,13 @@
+{
+  "average_effective_width": 0.0,
+  "cost": 56,
+  "coverage": 1,
+  "expanded": 56,
+  "generated": 576,
+  "length": 56,
+  "maximum_effective_width": 0,
+  "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
+  "total_time": 0.00804138,
+  "total_time_feature_evaluation": 0.000556551,
+  "valid_plan_value": 56
+}

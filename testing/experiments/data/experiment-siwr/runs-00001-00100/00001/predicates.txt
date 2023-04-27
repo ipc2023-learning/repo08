@@ -1,0 +1,5 @@
+on 2
+on-table 1
+holding 1
+clear 1
+arm-empty 0

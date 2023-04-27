@@ -1,0 +1,11 @@
+{
+  "algorithm": "dual_bfws",
+  "domain": "blocks_4_on",
+  "id": [
+    "dual_bfws",
+    "blocks_4_on",
+    "p-200-0.pddl"
+  ],
+  "problem": "p-200-0.pddl",
+  "run_dir": "runs-00001-00100/00002"
+}

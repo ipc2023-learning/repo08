@@ -1,0 +1,11 @@
+{
+  "algorithm": "lama_first",
+  "domain": "delivery",
+  "id": [
+    "lama_first",
+    "delivery",
+    "instance_20_25_40_0.pddl"
+  ],
+  "problem": "instance_20_25_40_0.pddl",
+  "run_dir": "runs-00001-00100/00003"
+}

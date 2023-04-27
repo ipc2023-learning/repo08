@@ -1,0 +1,11 @@
+{
+  "algorithm": "dual_bfws",
+  "domain": "spanner",
+  "id": [
+    "dual_bfws",
+    "spanner",
+    "pfile01-001.pddl"
+  ],
+  "problem": "pfile01-001.pddl",
+  "run_dir": "runs-00001-00100/00007"
+}
