@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import List
 
-from learner.src.util.command import create_experiment_workspace, change_working_directory, create_sym_link
+from learner.src.util.command import create_experiment_workspace, change_working_directory
 
 from learner.src.driver import Experiment, BASEDIR
 from learner.src.steps import generate_pipeline
@@ -15,13 +15,12 @@ from learner.src.instance_data.instance_information import InstanceInformation
 def generate_experiment(domain_filename: str, instance_filenames: List[str], workspace: str, **kwargs):
     """ """
     defaults = dict(
-        pipeline="sketch_pipeline",
-
         # The overall time limit in seconds
         timeout=6*24*60*60,
 
         # The maximum states that we allows in each complete state space.
-        max_states_per_instance=2000,
+        max_states_per_instance=1000,
+        max_time_per_instance=3,
 
         # Feature generator settings
         concept_complexity_limit=9,
@@ -37,10 +36,6 @@ def generate_experiment(domain_filename: str, instance_filenames: List[str], wor
         max_num_rules=4,
 
         asp_name="h-policy-explicit.lp",
-
-        # The degree of suboptimality used for pruning from the initial state.
-        # In the paper by Frances et. al, it is also used to encode acyclicity
-        delta = float("inf"),
 
         add_features=[],
         generate_features=True,
