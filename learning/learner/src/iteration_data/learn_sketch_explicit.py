@@ -35,11 +35,11 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
     clock = Clock("LEARNING")
     clock.set_start()
 
-    logging.info(colored(f"Initializing TupleGraphs...", "blue", "on_grey"))
+    logging.info(colored("Initializing TupleGraphs...", "blue", "on_grey"))
     tuple_graph_factory = TupleGraphFactory(width)
     for instance_data in instance_datas:
         instance_data.set_tuple_graphs(tuple_graph_factory.make_tuple_graphs(instance_data))
-    logging.info(colored(f"..done", "blue", "on_grey"))
+    logging.info(colored("..done", "blue", "on_grey"))
 
     i = 0
     selected_instance_idxs = [0]
@@ -55,9 +55,9 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
                 instance_data.instance_information.filename,
                 workspace / f"iteration_{i}")
             instance_data.set_state_space(instance_data.state_space, True)
-            print("     id:", instance_data.id, "name:", instance_data.instance_information.name)
+            print("     id:", instance_data.id, "name:", instance_data.instance_information.name, "initial_states:", instance_data.initial_s_idxs)
 
-        logging.info(colored(f"Initializing DomainFeatureData...", "blue", "on_grey"))
+        logging.info(colored("Initializing DomainFeatureData...", "blue", "on_grey"))
         domain_feature_data_factory = DomainFeatureDataFactory()
         domain_feature_data_factory.make_domain_feature_data_from_instance_datas(config, domain_data, selected_instance_datas)
         domain_feature_data_factory.statistics.print()
@@ -65,29 +65,29 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
             domain_data.domain_feature_data.boolean_features.add_feature(zero_cost_boolean_feature)
         for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.features_by_index:
             domain_data.domain_feature_data.numerical_features.add_feature(zero_cost_numerical_feature)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Initializing InstanceFeatureDatas...", "blue", "on_grey"))
+        logging.info(colored("Initializing InstanceFeatureDatas...", "blue", "on_grey"))
         for instance_data in selected_instance_datas:
             instance_data.set_feature_valuations(FeatureValuationsFactory().make_feature_valuations(instance_data))
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Initializing StatePairEquivalenceDatas...", "blue", "on_grey"))
+        logging.info(colored("Initializing StatePairEquivalenceDatas...", "blue", "on_grey"))
         state_pair_equivalence_factory = StatePairEquivalenceFactory()
         state_pair_equivalence_factory.make_state_pair_equivalences(domain_data, selected_instance_datas)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Initializing TupleGraphEquivalences...", "blue", "on_grey"))
+        logging.info(colored("Initializing TupleGraphEquivalences...", "blue", "on_grey"))
         tuple_graph_equivalence_factory = TupleGraphEquivalenceFactory()
         tuple_graph_equivalence_factory.make_tuple_graph_equivalences(domain_data, selected_instance_datas)
         tuple_graph_equivalence_factory.statistics.print()
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         # logging.info(colored(f"Initializing TupleGraphEquivalenceMinimizer...", "blue", "on_grey"))
         tuple_graph_equivalence_minimizer = TupleGraphEquivalenceMinimizer()
         for instance_data in selected_instance_datas:
             tuple_graph_equivalence_minimizer.minimize(instance_data)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         logging.info(colored("Iteration data preprocessing summary:", "yellow", "on_grey"))
         domain_feature_data_factory.statistics.print()
@@ -98,17 +98,17 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
         asp_factory = ASPFactory(max_num_rules=config.max_num_rules)
         asp_factory.load_problem_file(config.asp_location / config.asp_name)
         facts = asp_factory.make_facts(domain_data, selected_instance_datas)
-        logging.info(colored(f"Grounding Logic Program...", "blue", "on_grey"))
+        logging.info(colored("Grounding Logic Program...", "blue", "on_grey"))
         asp_factory.ground(facts)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Solving Logic Program...", "blue", "on_grey"))
+        logging.info(colored("Solving Logic Program...", "blue", "on_grey"))
         symbols, returncode = asp_factory.solve()
         if returncode == ClingoExitCode.UNSATISFIABLE:
             print("UNSAT")
             return None, None, None
         asp_factory.print_statistics()
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         booleans, numericals, dlplan_policy = ExplicitDlplanPolicyFactory().make_dlplan_policy_from_answer_set(symbols, domain_data)
         sketch = Sketch(booleans, numericals, dlplan_policy, width)
@@ -116,9 +116,9 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
         sketch.print()
         assert compute_smallest_unsolved_instance(config, sketch, selected_instance_datas) is None
 
-        logging.info(colored(f"Verifying learned sketch...", "blue", "on_grey"))
+        logging.info(colored("Verifying learned sketch...", "blue", "on_grey"))
         smallest_unsolved_instance = compute_smallest_unsolved_instance(config, sketch, instance_datas)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         if smallest_unsolved_instance is None:
             print(colored("Sketch solves all instances!", "red", "on_grey"))

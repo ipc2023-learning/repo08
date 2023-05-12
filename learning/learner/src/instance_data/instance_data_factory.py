@@ -2,27 +2,40 @@ import logging
 import dlplan
 import os
 
+from learner.src.domain_data.domain_data_factory import DomainDataFactory
 from learner.src.instance_data.instance_data import InstanceData
 from learner.src.util.command import create_experiment_workspace
 
+
 class InstanceDataFactory:
-    def make_instance_datas(self, config, domain_data):
+    def make_instance_datas(self, config):
         cwd = os.getcwd()
+        vocabulary_info = None
         instance_datas = []
         for instance_information in config.instance_informations:
             logging.info(f"Constructing InstanceData for filename {instance_information.filename}")
             create_experiment_workspace(instance_information.workspace, False)
             # change working directory to put planner output files in correct directory
             os.chdir(instance_information.workspace)
-            state_space = dlplan.generate_state_space(str(domain_data.domain_filename), str(instance_information.filename), domain_data.vocabulary_info, len(instance_datas))
+            result = dlplan.generate_state_space(str(config.domain_filename), str(instance_information.filename), vocabulary_info, len(instance_datas), config.max_time_per_instance)
+            if result.exit_code != dlplan.GeneratorExitCode.COMPLETE:
+                continue 
+            state_space = result.state_space
+            if vocabulary_info is None:
+                # We obtain the parsed vocabulary from the first instance
+                vocabulary_info = state_space.get_instance_info().get_vocabulary_info()
+                domain_data = DomainDataFactory().make_domain_data(config, vocabulary_info)
             if len(state_space.get_states()) > config.max_states_per_instance:
                 continue
             goal_distances = state_space.compute_goal_distances()
             if goal_distances.get(state_space.get_initial_state_index(), None) is None:
                 print("Unsolvable.")
                 continue
-            if set(state_space.get_states().keys()) == set(state_space.get_goal_state_indices()):
+            elif set(state_space.get_states().keys()) == set(state_space.get_goal_state_indices()):
                 print("Trivially solvable.")
+                continue
+            elif state_space.get_initial_state_index() in set(state_space.get_goal_state_indices()):
+                print("Initial state is goal.")
                 continue
             else:
                 print("Num states:", len(state_space.get_states()))
@@ -38,4 +51,4 @@ class InstanceDataFactory:
             instance_data.state_space.get_instance_info().set_index(instance_idx)
         # change back working directory
         os.chdir(cwd)
-        return instance_datas
+        return instance_datas, domain_data

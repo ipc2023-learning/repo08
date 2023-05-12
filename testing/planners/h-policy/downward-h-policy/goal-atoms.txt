@@ -1,2 +1,0 @@
-picked(c_1_1)
-picked(c_2_1)

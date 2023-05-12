@@ -27,6 +27,7 @@ Stage: build
 	cd /testing/planners/h-policy/downward-h-policy
 	rm -rf builds
 	rm -rf libs/dlplan/builds
+	rm -rf libs/dlplan/installs
 	./build.py
 	strip --strip-all builds/release/bin/downward
 	cd /
@@ -37,8 +38,10 @@ From: ubuntu:22.04
 Stage: run
 
 %files from build
+    testing/planners/h-policy/downward-h-policy/h-policy.py
     testing/planners/h-policy/downward-h-policy/fast-downward.py
 	testing/planners/h-policy/downward-h-policy/driver/
+	testing/planners/h-policy/downward-h-policy/libs/dlplan/installs/release/lib/dlplan/
 	testing/planners/h-policy/downward-h-policy/builds/release/bin/
 
     testing/planners/lama/fast-downward/fast-downward.py
@@ -48,7 +51,7 @@ Stage: run
 %post
     ## Install all necessary dependencies.
     apt-get update
-    apt-get install --no-install-recommends -y python3
+    apt-get install --no-install-recommends -y python3 xz-utils
 
 %runscript
     #! /bin/bash
@@ -58,6 +61,9 @@ Stage: run
     DOMAIN_FILE="$2"
     PROBLEM_FILE="$3"
     PLAN_FILE="$4"
+
+    # Somehow fast downward is not able to detect the libraries itself
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/testing/planners/h-policy/downward-h-policy/libs/dlplan/installs/release/lib/dlplan/"
 
 	tar -xJvf "$DOMAIN_KNOWLEDGE_FILE"
 

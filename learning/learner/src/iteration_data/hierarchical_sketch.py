@@ -1,5 +1,6 @@
 import copy
 import dlplan
+import logging
 
 from copy import deepcopy
 from termcolor import colored
@@ -66,6 +67,10 @@ class HierarchicalSketch:
         if self.width == 0:
             # with of current decomposition is 0 => cannot decompose further
             return []
+
+        logging.info(colored(f"Started refining", "red", "on_grey"))
+        if self.rule is not None:
+            print(self.rule.dlplan_policy.compute_repr())
 
         # Learn sketch for width k-1
         self.sketch, self.sketch_minimized, self.statistics = learn_sketch(self.config, self.domain_data, self.instance_datas, self.zero_cost_domain_feature_data, self.workspace_learning, self.width - 1)

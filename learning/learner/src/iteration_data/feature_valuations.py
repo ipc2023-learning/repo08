@@ -1,5 +1,6 @@
-from typing import Dict, List
+from typing import List
 from dataclasses import dataclass
+
 
 @dataclass
 class FeatureValuation:
@@ -15,4 +16,4 @@ class FeatureValuation:
                self.numerical_feature_valuations == other.numerical_feature_valuations
 
     def __str__(self):
-        return self.s_idx + ": " + self.boolean_feature_valuations + " " + self.numerical_feature_valuations
+        return str(self.s_idx) + ": " + str(self.boolean_feature_valuations) + " " + str(self.numerical_feature_valuations)

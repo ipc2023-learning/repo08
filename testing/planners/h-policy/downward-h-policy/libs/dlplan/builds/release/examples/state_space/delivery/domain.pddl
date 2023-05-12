@@ -1,1 +1,0 @@
-/home/dominik/projects/code/h-policy-learner/testing/planners/h-policy/downward-h-policy/libs/dlplan/examples/state_space/delivery/domain.pddl

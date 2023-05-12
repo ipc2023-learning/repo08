@@ -81,22 +81,22 @@ def learn_goal_separating_features(config, domain_data, instance_datas, zero_cos
             instance_data.set_state_space(instance_data.state_space, True)
             print("     id:", instance_data.id, "name:", instance_data.instance_information.name)
 
-        logging.info(colored(f"Initializing DomainFeatureData...", "blue", "on_grey"))
+        logging.info(colored("Initializing DomainFeatureData...", "blue", "on_grey"))
         domain_feature_data_factory = DomainFeatureDataFactory()
         domain_feature_data_factory.make_domain_feature_data_from_instance_datas(config, domain_data, selected_instance_datas)
         domain_feature_data_factory.statistics.print()
-        for boolean_feature in domain_data.domain_feature_data.boolean_features.features_by_index:
-            print(boolean_feature.dlplan_feature.compute_repr())
+        #for boolean_feature in domain_data.domain_feature_data.boolean_features.features_by_index:
+        #    print(boolean_feature.dlplan_feature.compute_repr())
         for zero_cost_boolean_feature in zero_cost_domain_feature_data.boolean_features.features_by_index:
             domain_data.domain_feature_data.boolean_features.add_feature(zero_cost_boolean_feature)
         for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.features_by_index:
             domain_data.domain_feature_data.numerical_features.add_feature(zero_cost_numerical_feature)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Initializing InstanceFeatureDatas...", "blue", "on_grey"))
+        logging.info(colored("Initializing InstanceFeatureDatas...", "blue", "on_grey"))
         for instance_data in selected_instance_datas:
             instance_data.set_feature_valuations(FeatureValuationsFactory().make_feature_valuations(instance_data))
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         asp_factory = ASPFactory()
         asp_factory.load_problem_file(config.asp_location / "goal-separating.lp")
@@ -105,17 +105,17 @@ def learn_goal_separating_features(config, domain_data, instance_datas, zero_cos
         facts.extend(asp_factory.make_domain_feature_data_facts(domain_data, selected_instance_datas))
         facts.extend(asp_factory.make_instance_feature_data_facts(domain_data, selected_instance_datas))
 
-        logging.info(colored(f"Grounding Logic Program...", "blue", "on_grey"))
+        logging.info(colored("Grounding Logic Program...", "blue", "on_grey"))
         asp_factory.ground(facts)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
-        logging.info(colored(f"Solving Logic Program...", "blue", "on_grey"))
+        logging.info(colored("Solving Logic Program...", "blue", "on_grey"))
         symbols, returncode = asp_factory.solve()
         if returncode == ClingoExitCode.UNSATISFIABLE:
             print("UNSAT")
             exit(1)
         asp_factory.print_statistics()
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         logging.info("Learned the following goal separating features:")
         booleans, numericals = parse_features_from_answer_set(symbols, domain_data)
@@ -123,9 +123,9 @@ def learn_goal_separating_features(config, domain_data, instance_datas, zero_cos
         print("\n".join([numerical.compute_repr() for numerical in numericals]))
         assert compute_smallest_unsolved_instance(booleans, numericals, selected_instance_datas) is None
 
-        logging.info(colored(f"Verifying goal separating features...", "blue", "on_grey"))
+        logging.info(colored("Verifying goal separating features...", "blue", "on_grey"))
         smallest_unsolved_instance = compute_smallest_unsolved_instance(booleans, numericals, instance_datas)
-        logging.info(colored(f"..done", "blue", "on_grey"))
+        logging.info(colored("..done", "blue", "on_grey"))
 
         if smallest_unsolved_instance is None:
             print(colored("Features separate all goal from non-goal states!", "red", "on_grey"))
