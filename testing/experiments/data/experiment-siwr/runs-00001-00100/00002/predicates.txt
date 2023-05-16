@@ -1,5 +1,0 @@
-on 2
-holding 1
-clear 1
-on-table 1
-arm-empty 0

@@ -33,37 +33,30 @@ to_hierarchical_search_engines(const std::vector<std::shared_ptr<SearchEngine>>&
 
 SearchStatus InnerNodeSearchEngine::step() {
     // cout << "InnerNodeSearchEngine::step" << endl;
-    // TODO: add cycle detection.
     State current_state = m_state_registry->lookup_state(m_initial_state_id);
     std::unordered_set<int> visited;
     visited.insert(current_state.get_id().value);
     while (!is_goal(current_state)) {
+        bool stepped = false;
         for (auto& child_search_engine : m_child_search_engines) {
             child_search_engine->set_initial_state(current_state);
-        }
-        for (const auto& child_search_engine : m_child_search_engines) {
-            bool solved = false;
             if (child_search_engine->get_goal_test().is_applicable()) {
                 SearchStatus child_search_status = child_search_engine->step();
-                switch (child_search_status) {
-                    case SOLVED: {
-                        PartialSearchSolutions child_partial_solutions = child_search_engine->get_partial_solutions();
-                        m_partial_solutions.insert(m_partial_solutions.end(), child_partial_solutions.begin(), child_partial_solutions.end());
-                        current_state = m_state_registry->lookup_state(child_partial_solutions.back().state_id);
-                        if (!visited.insert(current_state.get_id().value).second) {
-                            return SearchStatus::CYCLE;
-                        }
-                        solved = true;
-                        break;
+                if (child_search_status == SOLVED) {
+                    PartialSearchSolutions child_partial_solutions = child_search_engine->get_partial_solutions();
+                    m_partial_solutions.insert(m_partial_solutions.end(), child_partial_solutions.begin(), child_partial_solutions.end());
+                    current_state = m_state_registry->lookup_state(child_partial_solutions.back().state_id);
+                    if (!visited.insert(current_state.get_id().value).second) {
+                        return SearchStatus::CYCLE;
                     }
-                    default: {
-                        return child_search_status;
-                    }
-                }
-                if (solved) {
+                    stepped = true;
                     break;
                 }
+                return child_search_status;
             }
+        }
+        if (!stepped) {
+            return SearchStatus::FAILED;
         }
     }
     return SearchStatus::SOLVED;

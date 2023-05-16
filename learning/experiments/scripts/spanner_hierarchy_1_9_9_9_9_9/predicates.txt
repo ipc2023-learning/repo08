@@ -1,5 +1,0 @@
-tightened 1
-carrying 2
-loose 1
-useable 1
-at 2

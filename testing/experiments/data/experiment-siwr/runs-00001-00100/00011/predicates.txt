@@ -1,4 +1,0 @@
-free 1
-carry 2
-at-robby 1
-at 2

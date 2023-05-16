@@ -19,8 +19,8 @@ TEST(DLPTests, RoleIdentity) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Role role = factory.parse_role("r_identity(c_primitive(concept,0))");
-    EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
-    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
-    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
+    std::shared_ptr<const Role> role = factory.parse_role("r_identity(c_primitive(concept,0))");
+    EXPECT_EQ(role->evaluate(state).to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
+    EXPECT_EQ(role->evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
+    EXPECT_EQ(role->evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0,0},{1,1}}));
 }

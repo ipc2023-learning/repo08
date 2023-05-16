@@ -9,6 +9,7 @@ from learner.src.asp.returncodes import ClingoExitCode
 from learner.src.instance_data.instance_data import InstanceData
 from learner.src.instance_data.instance_information import InstanceInformation
 from learner.src.instance_data.tuple_graph_factory import TupleGraphFactory
+from learner.src.iteration_data.domain_feature_data import DomainFeatureData
 from learner.src.iteration_data.domain_feature_data_factory import DomainFeatureDataFactory
 from learner.src.iteration_data.feature_valuations_factory import FeatureValuationsFactory
 from learner.src.iteration_data.dlplan_policy_factory import ExplicitDlplanPolicyFactory
@@ -29,7 +30,7 @@ def compute_smallest_unsolved_instance(config, sketch: Sketch, instance_datas: L
     return None
 
 
-def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_data, workspace, width: int):
+def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_data: DomainFeatureData, workspace, width: int):
     """ Learns a sketch that solves all given instances while first computing required data.
     """
     clock = Clock("LEARNING")
@@ -61,15 +62,18 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
         domain_feature_data_factory = DomainFeatureDataFactory()
         domain_feature_data_factory.make_domain_feature_data_from_instance_datas(config, domain_data, selected_instance_datas)
         domain_feature_data_factory.statistics.print()
-        for zero_cost_boolean_feature in zero_cost_domain_feature_data.boolean_features.features_by_index:
+        for zero_cost_boolean_feature in zero_cost_domain_feature_data.boolean_features.f_idx_to_feature.values():
             domain_data.domain_feature_data.boolean_features.add_feature(zero_cost_boolean_feature)
-        for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.features_by_index:
+        for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.f_idx_to_feature.values():
             domain_data.domain_feature_data.numerical_features.add_feature(zero_cost_numerical_feature)
         logging.info(colored("..done", "blue", "on_grey"))
 
         logging.info(colored("Initializing InstanceFeatureDatas...", "blue", "on_grey"))
         for instance_data in selected_instance_datas:
-            instance_data.set_feature_valuations(FeatureValuationsFactory().make_feature_valuations(instance_data))
+            state_feature_valuations, boolean_feature_valuations, numerical_feature_valuations = FeatureValuationsFactory().make_feature_valuations(instance_data)
+            instance_data.set_feature_valuations(state_feature_valuations)
+            instance_data.boolean_feature_valuations = boolean_feature_valuations
+            instance_data.numerical_feature_valuations = numerical_feature_valuations
         logging.info(colored("..done", "blue", "on_grey"))
 
         logging.info(colored("Initializing StatePairEquivalenceDatas...", "blue", "on_grey"))
@@ -83,7 +87,7 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
         tuple_graph_equivalence_factory.statistics.print()
         logging.info(colored("..done", "blue", "on_grey"))
 
-        # logging.info(colored(f"Initializing TupleGraphEquivalenceMinimizer...", "blue", "on_grey"))
+        logging.info(colored("Initializing TupleGraphEquivalenceMinimizer...", "blue", "on_grey"))
         tuple_graph_equivalence_minimizer = TupleGraphEquivalenceMinimizer()
         for instance_data in selected_instance_datas:
             tuple_graph_equivalence_minimizer.minimize(instance_data)
@@ -110,8 +114,8 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
         asp_factory.print_statistics()
         logging.info(colored("..done", "blue", "on_grey"))
 
-        booleans, numericals, dlplan_policy = ExplicitDlplanPolicyFactory().make_dlplan_policy_from_answer_set(symbols, domain_data)
-        sketch = Sketch(booleans, numericals, dlplan_policy, width)
+        dlplan_policy = ExplicitDlplanPolicyFactory().make_dlplan_policy_from_answer_set(symbols, domain_data)
+        sketch = Sketch(dlplan_policy, width)
         logging.info("Learned the following sketch:")
         sketch.print()
         assert compute_smallest_unsolved_instance(config, sketch, selected_instance_datas) is None
@@ -135,16 +139,16 @@ def learn_sketch(config, domain_data, instance_datas, zero_cost_domain_feature_d
 
     logging.info(colored("Summary:", "green", "on_grey"))
     learning_statistics = LearningStatistics(
-        num_training_instances=len(selected_instance_datas),
+        num_training_instances=len(instance_datas),
         num_selected_training_instances=len(selected_instance_datas),
         num_states_in_selected_training_instances=sum([len(instance_data.state_space.get_states()) for instance_data in selected_instance_datas]),
-        num_features_in_pool=len(domain_data.domain_feature_data.boolean_features.features_by_index) + len(domain_data.domain_feature_data.numerical_features.features_by_index),
+        num_features_in_pool=len(domain_data.domain_feature_data.boolean_features.f_idx_to_feature) + len(domain_data.domain_feature_data.numerical_features.f_idx_to_feature),
         num_cpu_seconds=clock.accumulated,
         num_peak_memory_mb=clock.used_memory())
     learning_statistics.print()
     print("Resulting sketch:")
     sketch.print()
     print("Resulting sketch minimized:")
-    sketch_minimized = Sketch(sketch.booleans, sketch.numericals, dlplan.PolicyMinimizer().minimize(sketch.dlplan_policy), sketch.width)
+    sketch_minimized = Sketch(dlplan.PolicyMinimizer().minimize(sketch.dlplan_policy, domain_data.policy_builder), sketch.width)
     sketch_minimized.print()
     return sketch, sketch_minimized, learning_statistics

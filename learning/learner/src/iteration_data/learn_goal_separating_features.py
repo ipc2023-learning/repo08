@@ -1,5 +1,8 @@
 import logging
 import dlplan
+import re
+
+from clingo import Symbol
 
 from termcolor import colored
 from typing import List
@@ -17,10 +20,12 @@ from learner.src.domain_data.domain_data import DomainData
 
 
 def compute_state_b_values(booleans: List[dlplan.Boolean], numericals: List[dlplan.Numerical], instance_data: InstanceData, state: dlplan.State):
-    return tuple([boolean.evaluate(state, instance_data.denotations_caches) for boolean in booleans] + [numerical.evaluate(state, instance_data.denotations_caches) > 0 for numerical in numericals])
+    """ """
+    return tuple([boolean.evaluate(state) for boolean in booleans] + [numerical.evaluate(state) > 0 for numerical in numericals])
 
 
 def compute_smallest_unsolved_instance(booleans: List[dlplan.Boolean], numericals: List[dlplan.Numerical], instance_datas: List[InstanceData]):
+    """ """
     goal_b_values = set()
     nongoal_b_values = set()
     for instance_data in instance_datas:
@@ -44,16 +49,19 @@ def compute_smallest_unsolved_instance(booleans: List[dlplan.Boolean], numerical
     return None
 
 
-def parse_features_from_answer_set(symbols, domain_data: DomainData):
+def parse_features_from_answer_set(symbols: List[Symbol], domain_data: DomainData):
+    """ """
     booleans = []
     numericals = []
     for symbol in symbols:
         if symbol.name == "select":
-            f_idx = symbol.arguments[0].number
-            if f_idx < len(domain_data.domain_feature_data.boolean_features.features_by_index):
-                booleans.append(domain_data.domain_feature_data.boolean_features.features_by_index[f_idx].dlplan_feature)
-            else:
-                numericals.append(domain_data.domain_feature_data.numerical_features.features_by_index[f_idx - len(domain_data.domain_feature_data.boolean_features.features_by_index)].dlplan_feature)
+            assert isinstance(symbol, Symbol)
+            if symbol.arguments[0].string[0] == "b":
+                f_idx = int(re.findall(r"b(.+)", symbol.arguments[0].string)[0])
+                booleans.append(domain_data.domain_feature_data.boolean_features.f_idx_to_feature[f_idx].dlplan_feature)
+            elif symbol.arguments[0].string[0] == "n":
+                f_idx = int(re.findall(r"n(.+)", symbol.arguments[0].string)[0])
+                numericals.append(domain_data.domain_feature_data.numerical_features.f_idx_to_feature[f_idx].dlplan_feature)
     return booleans, numericals
 
 
@@ -85,25 +93,26 @@ def learn_goal_separating_features(config, domain_data, instance_datas, zero_cos
         domain_feature_data_factory = DomainFeatureDataFactory()
         domain_feature_data_factory.make_domain_feature_data_from_instance_datas(config, domain_data, selected_instance_datas)
         domain_feature_data_factory.statistics.print()
-        #for boolean_feature in domain_data.domain_feature_data.boolean_features.features_by_index:
-        #    print(boolean_feature.dlplan_feature.compute_repr())
-        for zero_cost_boolean_feature in zero_cost_domain_feature_data.boolean_features.features_by_index:
+        for zero_cost_boolean_feature in zero_cost_domain_feature_data.boolean_features.f_idx_to_feature.values():
             domain_data.domain_feature_data.boolean_features.add_feature(zero_cost_boolean_feature)
-        for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.features_by_index:
+        for zero_cost_numerical_feature in zero_cost_domain_feature_data.numerical_features.f_idx_to_feature.values():
             domain_data.domain_feature_data.numerical_features.add_feature(zero_cost_numerical_feature)
         logging.info(colored("..done", "blue", "on_grey"))
 
         logging.info(colored("Initializing InstanceFeatureDatas...", "blue", "on_grey"))
         for instance_data in selected_instance_datas:
-            instance_data.set_feature_valuations(FeatureValuationsFactory().make_feature_valuations(instance_data))
+            state_feature_valuations, boolean_feature_valuations, numerical_feature_valuations = FeatureValuationsFactory().make_feature_valuations(instance_data)
+            instance_data.set_feature_valuations(state_feature_valuations)
+            instance_data.boolean_feature_valuations = boolean_feature_valuations
+            instance_data.numerical_feature_valuations = numerical_feature_valuations
         logging.info(colored("..done", "blue", "on_grey"))
 
         asp_factory = ASPFactory()
         asp_factory.load_problem_file(config.asp_location / "goal-separating.lp")
         facts = []
-        facts.extend(asp_factory.make_state_space_facts(domain_data, selected_instance_datas))
-        facts.extend(asp_factory.make_domain_feature_data_facts(domain_data, selected_instance_datas))
-        facts.extend(asp_factory.make_instance_feature_data_facts(domain_data, selected_instance_datas))
+        facts.extend(asp_factory.make_state_space_facts(selected_instance_datas))
+        facts.extend(asp_factory.make_domain_feature_data_facts(domain_data))
+        facts.extend(asp_factory.make_instance_feature_data_facts(selected_instance_datas))
 
         logging.info(colored("Grounding Logic Program...", "blue", "on_grey"))
         asp_factory.ground(facts)

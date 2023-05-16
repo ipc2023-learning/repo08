@@ -73,52 +73,44 @@ PolicyBuilder& PolicyBuilder::operator=(PolicyBuilder&& other) {
 
 PolicyBuilder::~PolicyBuilder() = default;
 
-std::shared_ptr<const core::Boolean> PolicyBuilder::add_boolean_feature(core::Boolean boolean) {
-    return m_pImpl->add_boolean_feature(boolean);
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_pos_condition(const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->add_pos_condition(boolean);
 }
 
-std::shared_ptr<const core::Numerical> PolicyBuilder::add_numerical_feature(core::Numerical numerical) {
-    return m_pImpl->add_numerical_feature(numerical);
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_neg_condition(const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->add_neg_condition(boolean);
 }
 
-std::shared_ptr<const BaseCondition> PolicyBuilder::add_pos_condition(std::shared_ptr<const core::Boolean> b) {
-    return m_pImpl->add_pos_condition(b);
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_gt_condition(const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->add_gt_condition(numerical);
 }
 
-std::shared_ptr<const BaseCondition> PolicyBuilder::add_neg_condition(std::shared_ptr<const core::Boolean> b) {
-    return m_pImpl->add_neg_condition(b);
+std::shared_ptr<const BaseCondition> PolicyBuilder::add_eq_condition(const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->add_eq_condition(numerical);
 }
 
-std::shared_ptr<const BaseCondition> PolicyBuilder::add_gt_condition(std::shared_ptr<const core::Numerical> n) {
-    return m_pImpl->add_gt_condition(n);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_pos_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->add_pos_effect(boolean);
 }
 
-std::shared_ptr<const BaseCondition> PolicyBuilder::add_eq_condition(std::shared_ptr<const core::Numerical> n) {
-    return m_pImpl->add_eq_condition(n);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_neg_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->add_neg_effect(boolean);
 }
 
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_pos_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_pImpl->add_pos_effect(b);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_bot_effect(const std::shared_ptr<const core::Boolean>& boolean) {
+    return m_pImpl->add_bot_effect(boolean);
 }
 
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_neg_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_pImpl->add_neg_effect(b);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_inc_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->add_inc_effect(numerical);
 }
 
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_bot_effect(std::shared_ptr<const core::Boolean> b) {
-    return m_pImpl->add_bot_effect(b);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_dec_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->add_dec_effect(numerical);
 }
 
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_inc_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_pImpl->add_inc_effect(n);
-}
-
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_dec_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_pImpl->add_dec_effect(n);
-}
-
-std::shared_ptr<const BaseEffect> PolicyBuilder::add_bot_effect(std::shared_ptr<const core::Numerical> n) {
-    return m_pImpl->add_bot_effect(n);
+std::shared_ptr<const BaseEffect> PolicyBuilder::add_bot_effect(const std::shared_ptr<const core::Numerical>& numerical) {
+    return m_pImpl->add_bot_effect(numerical);
 }
 
 std::shared_ptr<const Rule> PolicyBuilder::add_rule(
@@ -127,16 +119,9 @@ std::shared_ptr<const Rule> PolicyBuilder::add_rule(
     return m_pImpl->add_rule(std::move(conditions), std::move(effects));
 }
 
-Policy PolicyBuilder::get_result() {
-    return m_pImpl->get_result();
-}
-
-Booleans PolicyBuilder::get_booleans() const {
-    return m_pImpl->get_booleans();
-}
-
-Numericals PolicyBuilder::get_numericals() const {
-    return m_pImpl->get_numericals();
+std::shared_ptr<const Policy> PolicyBuilder::add_policy(
+    std::set<std::shared_ptr<const Rule>>&& rules) {
+    return m_pImpl->add_policy(std::move(rules));
 }
 
 
@@ -164,8 +149,8 @@ PolicyReader& PolicyReader::operator=(PolicyReader&& other) {
 
 PolicyReader::~PolicyReader() = default;
 
-Policy PolicyReader::read(const std::string& data, core::SyntacticElementFactory& factory) const {
-    return m_pImpl->read(data, factory);
+std::shared_ptr<const Policy> PolicyReader::read(const std::string& data, PolicyBuilder& builder, core::SyntacticElementFactory& factory) const {
+    return m_pImpl->read(data, builder, factory);
 }
 
 

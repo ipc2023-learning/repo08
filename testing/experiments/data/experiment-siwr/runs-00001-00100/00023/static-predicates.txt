@@ -1,3 +1,0 @@
-connected 2
-object 1
-place 1

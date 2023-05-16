@@ -1,7 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
-
+#
 if [ $# -ne 1 ]; then
     echo "Usage: ./push-docker.sh 19.06"
     exit 1

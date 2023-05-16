@@ -6,9 +6,26 @@ namespace dlplan::policy {
 BooleanCondition::BooleanCondition(std::shared_ptr<const core::Boolean> boolean)
     : BaseCondition(boolean), m_boolean(boolean) { }
 
+std::shared_ptr<const core::Boolean> BooleanCondition::get_boolean() const {
+    return m_boolean;
+}
+
+std::shared_ptr<const core::Numerical> BooleanCondition::get_numerical() const {
+    return nullptr;
+}
+
 
 NumericalCondition::NumericalCondition(std::shared_ptr<const core::Numerical> numerical)
     : BaseCondition(numerical), m_numerical(numerical) { }
+
+std::shared_ptr<const core::Boolean> NumericalCondition::get_boolean() const {
+    return nullptr;
+}
+
+std::shared_ptr<const core::Numerical> NumericalCondition::get_numerical() const {
+    return m_numerical;
+}
+
 
 
 PositiveBooleanCondition::PositiveBooleanCondition(std::shared_ptr<const core::Boolean> boolean_feature)
@@ -31,7 +48,7 @@ std::string PositiveBooleanCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> PositiveBooleanCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_pos_condition(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_pos_condition(m_boolean);
 }
 
 
@@ -55,7 +72,7 @@ std::string NegativeBooleanCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> NegativeBooleanCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_neg_condition(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_neg_condition(m_boolean);
 }
 
 
@@ -79,7 +96,7 @@ std::string EqualNumericalCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> EqualNumericalCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_eq_condition(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_eq_condition(m_numerical);
 }
 
 
@@ -103,7 +120,7 @@ std::string GreaterNumericalCondition::str() const {
 }
 
 std::shared_ptr<const BaseCondition> GreaterNumericalCondition::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_gt_condition(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_gt_condition(m_numerical);
 }
 
 }

@@ -20,8 +20,8 @@ TEST(DLPTests, ConceptOneOf) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Concept concept = factory.parse_concept("c_one_of(A)");
-    EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({0}));
-    EXPECT_EQ(concept.evaluate(state, caches)->to_sorted_vector(), Index_Vec({0}));
-    EXPECT_EQ(concept.evaluate({state}, caches)->to_sorted_vector(), Index_Vec({0}));
+    std::shared_ptr<const Concept> concept = factory.parse_concept("c_one_of(A)");
+    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({0}));
+    EXPECT_EQ(concept->evaluate(state, caches)->to_sorted_vector(), Index_Vec({0}));
+    EXPECT_EQ(concept->evaluate({state}, caches)->to_sorted_vector(), Index_Vec({0}));
 }

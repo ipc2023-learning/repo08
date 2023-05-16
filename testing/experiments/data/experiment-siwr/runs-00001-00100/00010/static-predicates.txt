@@ -1,4 +1,0 @@
-ball 1
-gripper 1
-room 1
-object 1

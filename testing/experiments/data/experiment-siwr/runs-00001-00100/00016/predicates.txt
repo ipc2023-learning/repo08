@@ -1,3 +1,0 @@
-at 1
-picked 1
-reward 1
