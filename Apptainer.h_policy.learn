@@ -51,4 +51,14 @@ From: ubuntu:22.04
 Name        Hierarchical Policy Learner
 Description Hierarchical Policy Learner
 Authors     Dominik Drexler <dominik.drexler@liu.se>
-# apptainer build h-policy-learner.sif h-policy-learner.def
+License     GPL 3
+Environments	multi-core
+SupportsDerivedPredicates                       no
+SupportsUniversallyQuantifiedPreconditions      yes
+SupportsExistentiallyQuantifiedPreconditions    yes
+SupportsUniversallyQuantifiedEffects            yes
+SupportsNegativePreconditions                   yes
+SupportsEqualityPreconditions                   yes
+SupportsInequalityPreconditions                 yes
+SupportsConditionalEffects                      no
+SupportsImplyPreconditions                      yes
