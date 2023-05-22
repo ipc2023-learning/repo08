@@ -5,6 +5,7 @@ from typing import Dict, MutableSet, List
 from collections import defaultdict, deque
 
 from learner.src.instance_data.instance_data import InstanceData
+from learner.src.iteration_data.feature_valuations_factory import FeatureValuationsFactory
 
 
 class Sketch:
