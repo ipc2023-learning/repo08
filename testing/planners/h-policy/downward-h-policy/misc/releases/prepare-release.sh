@@ -4,8 +4,7 @@
 ##  * The repository containing this script is on the revision we want to release.
 ##  * The changelog is up to date and committed.
 
-set -euo pipefail
-
+#
 if [ $# -ne 1 ]; then
     echo "Usage: ./prepare-release.sh 19.06.1"
     exit 1

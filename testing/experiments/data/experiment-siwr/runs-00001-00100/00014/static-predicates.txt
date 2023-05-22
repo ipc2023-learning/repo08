@@ -1,5 +1,0 @@
-above 2
-destin 2
-object 1
-passenger 1
-floor 1

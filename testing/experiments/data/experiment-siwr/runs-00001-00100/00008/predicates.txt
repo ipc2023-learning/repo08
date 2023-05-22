@@ -1,3 +1,0 @@
-carrying 2
-at 2
-empty 1

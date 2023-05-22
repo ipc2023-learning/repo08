@@ -1,4 +1,0 @@
-adjacent 2
-unblocked 1
-object 1
-cell 1

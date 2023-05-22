@@ -47,10 +47,14 @@ class DomainFeatureDataFactory:
         self.statistics.increase_num_boolean_features(len(boolean_features))
         self.statistics.increase_num_numerical_features(len(numerical_features))
         domain_feature_data = DomainFeatureData()
+        # To use features from parent node for free have add them with cost 1 and add cost + 1 to each generated feature
         for boolean_feature in boolean_features:
-            domain_feature_data.boolean_features.add_feature(Feature(boolean_feature, boolean_feature.compute_complexity() + 1))
+            # To break ties in favor of numerical features, we add an additional + 1 to the complexity of Boolean features.
+            domain_feature_data.boolean_features.add_feature(Feature(boolean_feature, boolean_feature.compute_complexity() + 1 + 1))
+            domain_data.all_domain_feature_data.boolean_features.add_feature(Feature(boolean_feature, boolean_feature.compute_complexity() + 1 + 1))
         for numerical_feature in numerical_features:
             domain_feature_data.numerical_features.add_feature(Feature(numerical_feature, numerical_feature.compute_complexity() + 1))
+            domain_data.all_domain_feature_data.numerical_features.add_feature(Feature(numerical_feature, numerical_feature.compute_complexity() + 1))
         domain_data.domain_feature_data = domain_feature_data
 
     def _generate_features(self, config, domain_data: DomainData, dlplan_states: List[dlplan.State]) -> Tuple[List[dlplan.Boolean], List[dlplan.Numerical]]:

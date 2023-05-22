@@ -22,8 +22,8 @@ TEST(DLPTests, RoleRestrict) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Role role = factory.parse_role("r_restrict(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(role.evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 1}}));
-    EXPECT_EQ(role.evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
-    EXPECT_EQ(role.evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
+    std::shared_ptr<const Role> role = factory.parse_role("r_restrict(r_primitive(role,0,1),c_primitive(concept,0))");
+    EXPECT_EQ(role->evaluate(state).to_sorted_vector(), IndexPair_Vec({{0, 1}}));
+    EXPECT_EQ(role->evaluate(state, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
+    EXPECT_EQ(role->evaluate({state}, caches)->to_sorted_vector(), IndexPair_Vec({{0, 1}}));
 }

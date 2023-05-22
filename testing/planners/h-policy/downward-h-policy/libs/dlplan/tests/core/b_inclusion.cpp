@@ -25,13 +25,13 @@ TEST(DLPTests, ConceptInclusion) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Boolean boolean = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");
+    std::shared_ptr<const Boolean> boolean = factory.parse_boolean("b_inclusion(c_primitive(concept_1,0),c_primitive(concept_2,0))");
 
-    EXPECT_EQ(boolean.evaluate(s1), true);
-    EXPECT_EQ(boolean.evaluate(s1, caches), true);
-    EXPECT_EQ(boolean.evaluate({s1}, caches), true);
+    EXPECT_EQ(boolean->evaluate(s1), true);
+    EXPECT_EQ(boolean->evaluate(s1, caches), true);
+    EXPECT_EQ(boolean->evaluate({s1}, caches), true);
 
-    EXPECT_EQ(boolean.evaluate(s2), false);
-    EXPECT_EQ(boolean.evaluate(s2, caches), false);
-    EXPECT_EQ(boolean.evaluate({s2}, caches), false);
+    EXPECT_EQ(boolean->evaluate(s2), false);
+    EXPECT_EQ(boolean->evaluate(s2, caches), false);
+    EXPECT_EQ(boolean->evaluate({s2}, caches), false);
 }

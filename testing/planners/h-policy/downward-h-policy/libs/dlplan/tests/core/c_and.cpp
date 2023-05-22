@@ -23,9 +23,9 @@ TEST(DLPTests, ConceptAnd) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Concept concept = factory.parse_concept("c_and(c_primitive(concept_1,0),c_primitive(concept_2,0))");
+    std::shared_ptr<const Concept> concept = factory.parse_concept("c_and(c_primitive(concept_1,0),c_primitive(concept_2,0))");
 
-    EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({1}));
-    EXPECT_EQ(concept.evaluate(state, caches)->to_sorted_vector(), Index_Vec({1}));
-    EXPECT_EQ(concept.evaluate({state}, caches)->to_sorted_vector(), Index_Vec({1}));
+    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({1}));
+    EXPECT_EQ(concept->evaluate(state, caches)->to_sorted_vector(), Index_Vec({1}));
+    EXPECT_EQ(concept->evaluate({state}, caches)->to_sorted_vector(), Index_Vec({1}));
 }

@@ -1,6 +1,0 @@
-adjacent 2
-object 1
-cell 1
-locatable 1
-package 1
-truck 1

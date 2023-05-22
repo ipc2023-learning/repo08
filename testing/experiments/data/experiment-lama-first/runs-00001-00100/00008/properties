@@ -1,9 +1,0 @@
-{
-  "cost": 60,
-  "coverage": 1,
-  "error": "none",
-  "node": "dominik-HP-EliteBook-845-G7-Notebook-PC",
-  "planner_exit_code": 0,
-  "planner_wall_clock_time": 0.55,
-  "total_time": 0.53
-}

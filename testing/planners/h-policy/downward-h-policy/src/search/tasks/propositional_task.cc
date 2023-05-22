@@ -116,6 +116,7 @@ PropositionalTask::PropositionalTask(
     const TaskProxy &task_proxy)
     : DelegatingTask(parent),
       m_vocabulary_info(std::make_shared<dlplan::core::VocabularyInfo>()),
+      m_policy_builder(dlplan::policy::PolicyBuilder()),
       m_syntactic_element_factory(std::make_shared<dlplan::core::VocabularyInfo>()),
       m_fact_indexer(std::make_shared<novelty::FactIndexer>(TaskProxy(*parent))) {
     m_syntactic_element_factory = dlplan::core::SyntacticElementFactory(m_vocabulary_info);
@@ -179,7 +180,11 @@ bool PropositionalTask::is_negated_fact(int fact_id) const {
     return m_is_negated_facts[fact_id];
 }
 
-dlplan::core::SyntacticElementFactory& PropositionalTask::get_syntactic_element_factory_ref() {
+dlplan::policy::PolicyBuilder& PropositionalTask::get_policy_builder() {
+    return m_policy_builder;
+}
+
+dlplan::core::SyntacticElementFactory& PropositionalTask::get_syntactic_element_factory() {
     return m_syntactic_element_factory;
 }
 

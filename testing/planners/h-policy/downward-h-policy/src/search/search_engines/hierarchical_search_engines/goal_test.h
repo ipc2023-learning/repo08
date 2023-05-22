@@ -38,7 +38,7 @@ public:
 class SketchSubgoal : public GoalTest {
 private:
     std::string m_sketch_filename;
-    dlplan::policy::Policy m_policy;
+    std::shared_ptr<const dlplan::policy::Policy> m_policy;
     dlplan::core::State m_initial_state;
     std::vector<std::shared_ptr<const dlplan::policy::Rule>> m_satisfied_rules;
 

@@ -23,8 +23,8 @@ TEST(DLPTests, ConceptNot) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_not(c_primitive(concept_1,0))");
-    EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({2}));
-    EXPECT_EQ(concept.evaluate(state, caches)->to_sorted_vector(), Index_Vec({2}));
-    EXPECT_EQ(concept.evaluate({state}, caches)->to_sorted_vector(), Index_Vec({2}));
+    std::shared_ptr<const Concept> concept = factory.parse_concept("c_not(c_primitive(concept_1,0))");
+    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({2}));
+    EXPECT_EQ(concept->evaluate(state, caches)->to_sorted_vector(), Index_Vec({2}));
+    EXPECT_EQ(concept->evaluate({state}, caches)->to_sorted_vector(), Index_Vec({2}));
 }

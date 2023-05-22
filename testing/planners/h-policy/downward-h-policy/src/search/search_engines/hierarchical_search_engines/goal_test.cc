@@ -46,7 +46,7 @@ SketchSubgoal::SketchSubgoal(const options::Options &opts)
 
 void SketchSubgoal::set_initial_state(const State& initial_state) {
     m_initial_state = m_propositional_task->compute_dlplan_state(initial_state);
-    m_satisfied_rules = m_policy.evaluate_conditions_eager(m_initial_state, m_propositional_task->get_denotations_caches());
+    m_satisfied_rules = m_policy->evaluate_conditions_eager(m_initial_state, m_propositional_task->get_denotations_caches());
 }
 
 bool SketchSubgoal::is_applicable() const {
@@ -54,13 +54,14 @@ bool SketchSubgoal::is_applicable() const {
 }
 
 bool SketchSubgoal::is_goal(const State& current_state) const {
-    bool is_subgoal = m_policy.evaluate_effects_lazy(
+    bool is_subgoal = m_policy->evaluate_effects_lazy(
         m_initial_state,
         m_propositional_task->compute_dlplan_state(current_state),
         m_satisfied_rules,
         m_propositional_task->get_denotations_caches()) != nullptr;
-    bool is_topgoal = task_properties::is_goal_state(TaskProxy(*tasks::g_root_task), current_state);
-    return is_subgoal || is_topgoal;
+    //bool is_topgoal = task_properties::is_goal_state(TaskProxy(*tasks::g_root_task), current_state);
+    //return is_subgoal || is_topgoal;
+    return is_subgoal;
 }
 
 void SketchSubgoal::set_propositional_task(std::shared_ptr<extra_tasks::PropositionalTask> propositional_task) {
@@ -70,7 +71,7 @@ void SketchSubgoal::set_propositional_task(std::shared_ptr<extra_tasks::Proposit
     content << infile.rdbuf();
     std::cout << m_sketch_filename << std::endl;
     std::cout << content.str() << std::endl;
-    m_policy = dlplan::policy::PolicyReader().read(content.str(), propositional_task->get_syntactic_element_factory_ref());
+    m_policy = dlplan::policy::PolicyReader().read(content.str(), propositional_task->get_policy_builder(), propositional_task->get_syntactic_element_factory());
 }
 
 

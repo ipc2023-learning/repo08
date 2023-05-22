@@ -19,12 +19,12 @@ TEST(DLPTests, BooleanNullary) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Boolean boolean = factory.parse_boolean("b_nullary(predicate)");
+    std::shared_ptr<const Boolean> boolean = factory.parse_boolean("b_nullary(predicate)");
 
-    EXPECT_EQ(boolean.evaluate(s0), true);
-    EXPECT_EQ(boolean.evaluate(s0, caches), true);
-    EXPECT_EQ(boolean.evaluate({s0}, caches), true);
+    EXPECT_EQ(boolean->evaluate(s0), true);
+    EXPECT_EQ(boolean->evaluate(s0, caches), true);
+    EXPECT_EQ(boolean->evaluate({s0}, caches), true);
 
-    EXPECT_EQ(boolean.evaluate(s1), false);
+    EXPECT_EQ(boolean->evaluate(s1), false);
 
 }

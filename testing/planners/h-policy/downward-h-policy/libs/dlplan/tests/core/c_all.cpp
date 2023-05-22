@@ -25,11 +25,11 @@ TEST(DLPTests, ConceptAll) {
 
     SyntacticElementFactory factory(vocabulary);
 
-    Concept concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
-    EXPECT_EQ(concept.evaluate(state).to_sorted_vector(), Index_Vec({0, 2, 3}));
+    std::shared_ptr<const Concept> concept = factory.parse_concept("c_all(r_primitive(role,0,1),c_primitive(concept,0))");
+    EXPECT_EQ(concept->evaluate(state).to_sorted_vector(), Index_Vec({0, 2, 3}));
 
     DenotationsCaches caches;
-    EXPECT_EQ(concept.evaluate(state), *concept.evaluate(state, caches));
+    EXPECT_EQ(concept->evaluate(state), *concept->evaluate(state, caches));
 }
 
 TEST(DLPTests, ConceptAll2) {
@@ -51,10 +51,10 @@ TEST(DLPTests, ConceptAll2) {
     SyntacticElementFactory factory(vocabulary);
     DenotationsCaches caches;
 
-    Concept concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
-    EXPECT_EQ(concept.evaluate(state_1).to_sorted_vector(), Index_Vec({0, 2, 4}));
-    EXPECT_EQ(concept.evaluate(state_1, caches)->to_sorted_vector(), Index_Vec({0, 2, 4}));
+    std::shared_ptr<const Concept> concept = factory.parse_concept("c_all(r_primitive(at,1,0),c_primitive(man,0))");
+    EXPECT_EQ(concept->evaluate(state_1).to_sorted_vector(), Index_Vec({0, 2, 4}));
+    EXPECT_EQ(concept->evaluate(state_1, caches)->to_sorted_vector(), Index_Vec({0, 2, 4}));
 
-    EXPECT_EQ(concept.evaluate(state_2).to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
-    EXPECT_EQ(concept.evaluate(state_2, caches)->to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
+    EXPECT_EQ(concept->evaluate(state_2).to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
+    EXPECT_EQ(concept->evaluate(state_2, caches)->to_sorted_vector(), Index_Vec({0, 1, 2, 4}));
 }

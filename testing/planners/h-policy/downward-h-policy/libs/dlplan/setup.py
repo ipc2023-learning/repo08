@@ -1,12 +1,13 @@
 
 import os
+import sys
 import subprocess
 from pathlib import Path
 
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.1.14"
+__version__ = "0.2.12"
 HERE = Path(__file__).resolve().parent
 
 
@@ -33,7 +34,8 @@ class CMakeBuild(build_ext):
             "-DDLPLAN_PYTHON=On",
             f"-DDLPLAN_VERSION_INFO={__version__}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
-            f"-DENABLE_TESTING:bool=false",
+            "-DENABLE_TESTING:bool=false",
+            f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
         ]
         build_args = []
@@ -60,7 +62,7 @@ setup(
     url="https://github.com/rleap-project/dlplan",
     description="A library for using description logics features in planning",
     long_description="",
-    install_requires=["pybind11", "pybind11-global", "state_space_generator"],
+    install_requires=["pybind11==2.10.4", "pybind11-global==2.10.4", "state_space_generator==0.1.7", "cmake>=3.16.3"],
     packages=['dlplan'],
     package_dir={"": "api/python/src"},
     ext_modules=[CMakeExtension("_dlplan")],

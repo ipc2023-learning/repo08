@@ -1,7 +1,6 @@
 """ Module description: initialize workspace and domain config, instance configs
 """
 
-import os
 from pathlib import Path
 from typing import List
 
@@ -19,8 +18,8 @@ def generate_experiment(domain_filename: str, instance_filenames: List[str], wor
         timeout=6*24*60*60,
 
         # The maximum states that we allows in each complete state space.
-        max_states_per_instance=1000,
-        max_time_per_instance=3,
+        max_states_per_instance=500,
+        max_time_per_instance=10,
 
         # Feature generator settings
         concept_complexity_limit=9,
@@ -30,6 +29,8 @@ def generate_experiment(domain_filename: str, instance_filenames: List[str], wor
         distance_numerical_complexity_limit=9,
         time_limit=3600,
         feature_limit=1000000,
+
+        closed_Q=True,
 
         width=2,
 

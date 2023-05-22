@@ -1,7 +1,7 @@
 import dlplan
 import math
 
-from collections import defaultdict, deque
+from collections import defaultdict
 from typing import  List, Dict
 
 from learner.src.instance_data.instance_information import InstanceInformation
@@ -11,8 +11,8 @@ from learner.src.iteration_data.sketch import Sketch
 
 
 class SubproblemInstanceDataFactory:
-    def make_subproblems(self, config, instance_datas: List[InstanceData], sketch: Sketch, rule: dlplan.Rule, width: int):
-        features = list(sketch.booleans) + list(sketch.numericals)
+    def make_subproblems(self, config, instance_datas: List[InstanceData], sketch: Sketch, rule: dlplan.Rule, r_idx: int, width: int):
+        features = list(sketch.dlplan_policy.get_booleans()) + list(sketch.dlplan_policy.get_numericals())
         subproblem_instance_datas = []
         for instance_data in instance_datas:
             state_space = instance_data.state_space
@@ -27,12 +27,12 @@ class SubproblemInstanceDataFactory:
                     # Definition of relevant states: state must satisfy condition of rule
                     continue
                 state = state_space.get_states()[s_idx]
-                feature_valuation = tuple([feature.evaluate(state) for feature in features])
+                feature_valuation = tuple([feature.evaluate(state, instance_data.denotations_caches) for feature in features])
                 feature_valuation_to_relevant_s_idxs[feature_valuation].add(s_idx)
             # 2. Group subgoal states with same feature valuation together
             feature_valuation_to_target_s_idxs = defaultdict(set)
             for s_idx, state in instance_data.state_space.get_states().items():
-                feature_valuation = tuple([feature.evaluate(state) for feature in features])
+                feature_valuation = tuple([feature.evaluate(state, instance_data.denotations_caches) for feature in features])
                 feature_valuation_to_target_s_idxs[feature_valuation].add(s_idx)
             # 3. Compute goals for each group.
             for _, relevant_s_idxs in feature_valuation_to_relevant_s_idxs.items():
@@ -85,7 +85,7 @@ class SubproblemInstanceDataFactory:
                     subproblem_instance_information = InstanceInformation(
                         name,
                         instance_data.instance_information.filename,
-                        instance_data.instance_information.workspace / f"rule_{rule.get_index()}" / name)
+                        instance_data.instance_information.workspace / f"rule_{r_idx}" / name)
                     subproblem_instance_data = InstanceData(
                         len(subproblem_instance_datas),
                         instance_data.domain_data,
@@ -105,7 +105,6 @@ class SubproblemInstanceDataFactory:
         subproblem_instance_datas = sorted(subproblem_instance_datas, key=lambda x : len(x.state_space.get_states()))
         for instance_idx, instance_data in enumerate(subproblem_instance_datas):
             instance_data.id = instance_idx
-            instance_data.state_space.get_instance_info().set_index(instance_idx)
         print("Number of problems:", len(instance_datas))
         print("Number of subproblems:", len(subproblem_instance_datas))
         print("Highest number of states in problem:", max([len(instance_data.state_space.get_states()) for instance_data in instance_datas]))

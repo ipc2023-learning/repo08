@@ -1,7 +1,6 @@
 #! /bin/bash
 
-set -euo pipefail
-
+#
 # "release" or "debug"
 BUILD_TYPE="$1"
 

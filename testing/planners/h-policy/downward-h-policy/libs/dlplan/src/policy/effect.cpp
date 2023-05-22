@@ -6,9 +6,25 @@ namespace dlplan::policy {
 BooleanEffect::BooleanEffect(std::shared_ptr<const core::Boolean> boolean)
     : BaseEffect(boolean), m_boolean(boolean) { }
 
+std::shared_ptr<const core::Boolean> BooleanEffect::get_boolean() const {
+    return m_boolean;
+}
+
+std::shared_ptr<const core::Numerical> BooleanEffect::get_numerical() const {
+    return nullptr;
+}
+
 
 NumericalEffect::NumericalEffect(std::shared_ptr<const core::Numerical> numerical)
     : BaseEffect(numerical), m_numerical(numerical) { }
+
+std::shared_ptr<const core::Boolean> NumericalEffect::get_boolean() const {
+    return nullptr;
+}
+
+std::shared_ptr<const core::Numerical> NumericalEffect::get_numerical() const {
+    return m_numerical;
+}
 
 
 PositiveBooleanEffect::PositiveBooleanEffect(std::shared_ptr<const core::Boolean> boolean_feature)
@@ -31,7 +47,7 @@ std::string PositiveBooleanEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> PositiveBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_pos_effect(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_pos_effect(m_boolean);
 }
 
 
@@ -55,7 +71,7 @@ std::string NegativeBooleanEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> NegativeBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_neg_effect(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_neg_effect(m_boolean);
 }
 
 
@@ -79,7 +95,7 @@ std::string UnchangedBooleanEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> UnchangedBooleanEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_bot_effect(policy_builder.add_boolean_feature(*m_boolean));
+    return policy_builder.add_bot_effect(m_boolean);
 }
 
 
@@ -103,7 +119,7 @@ std::string IncrementNumericalEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> IncrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_inc_effect(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_inc_effect(m_numerical);
 }
 
 
@@ -127,7 +143,7 @@ std::string DecrementNumericalEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> DecrementNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_dec_effect(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_dec_effect(m_numerical);
 }
 
 
@@ -151,7 +167,7 @@ std::string UnchangedNumericalEffect::str() const {
 }
 
 std::shared_ptr<const BaseEffect> UnchangedNumericalEffect::copy_to_builder(PolicyBuilder& policy_builder) const {
-    return policy_builder.add_bot_effect(policy_builder.add_numerical_feature(*m_numerical));
+    return policy_builder.add_bot_effect(m_numerical);
 }
 
 }

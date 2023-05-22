@@ -16,14 +16,11 @@ int main() {
     vocabulary_info->add_predicate("unary", 1);
 
     dlplan::core::SyntacticElementFactory factory(vocabulary_info);
-    dlplan::core::Boolean boolean = factory.parse_boolean("b_empty(c_primitive(unary,0))");
-    dlplan::core::Numerical numerical = factory.parse_numerical("n_count(c_primitive(unary,0))");
+    std::shared_ptr<const Boolean> b = factory.parse_boolean("b_empty(c_primitive(unary,0))");
+    std::shared_ptr<const Numerical> n = factory.parse_numerical("n_count(c_primitive(unary,0))");
 
     // Construct the empty policy.
     PolicyBuilder builder;
-    // Add features.
-    std::shared_ptr<const Boolean> b = builder.add_boolean_feature(boolean);
-    std::shared_ptr<const Numerical> n = builder.add_numerical_feature(numerical);
     // Add conditions and effects the rule.
     std::shared_ptr<const BaseCondition> b_neg_condition_0 = builder.add_neg_condition(b);
     std::shared_ptr<const BaseEffect> b_bot_effect_0 = builder.add_bot_effect(b);
@@ -34,7 +31,7 @@ int main() {
         {b_neg_condition_0, n_gt_condition_0},
         {b_bot_effect_0, n_dec_effect_0}
     );
-    Policy policy = builder.get_result();
+    std::shared_ptr<const Policy> policy = builder.add_policy({rule});
 
     // Construct InstanceInfo and States
     std::shared_ptr<dlplan::core::InstanceInfo> instance_info = std::make_shared<dlplan::core::InstanceInfo>(vocabulary_info);
@@ -48,22 +45,23 @@ int main() {
     dlplan::core::DenotationsCaches caches;
 
     // Evaluate the policy using the cache
-    assert(policy.evaluate_lazy(s2, s1, caches));
-    assert(!policy.evaluate_lazy(s2, s0, caches));
-    assert(!policy.evaluate_lazy(s1, s2, caches));
-    assert(!policy.evaluate_lazy(s0, s2, caches));
+    assert(policy->evaluate_lazy(s2, s1, caches));
+    assert(!policy->evaluate_lazy(s2, s0, caches));
+    assert(!policy->evaluate_lazy(s1, s2, caches));
+    assert(!policy->evaluate_lazy(s0, s2, caches));
     // Evaluate the policy without the cache
-    assert(policy.evaluate_lazy(s2, s1));
-    assert(!policy.evaluate_lazy(s2, s0));
-    assert(!policy.evaluate_lazy(s1, s2));
-    assert(!policy.evaluate_lazy(s0, s2));
+    assert(policy->evaluate_lazy(s2, s1));
+    assert(!policy->evaluate_lazy(s2, s0));
+    assert(!policy->evaluate_lazy(s1, s2));
+    assert(!policy->evaluate_lazy(s0, s2));
 
     // Write policy to file.
     std::cout << "Write policy:" << std::endl;
-    std::cout << policy.str() << std::endl << std::endl;
+    std::cout << policy->compute_repr() << std::endl << std::endl;
+    std::cout << policy->str() << std::endl << std::endl;
     std::ofstream ofs;
     ofs.open("test.txt", std::ofstream::out);
-    ofs << PolicyWriter().write(policy);
+    ofs << PolicyWriter().write(*policy);
     ofs.close();
 
     // Read policy from file.
@@ -71,11 +69,10 @@ int main() {
     ifs.open("test.txt", std::ifstream::in);
     std::stringstream ss;
     ss << ifs.rdbuf();
-    Policy policy_in = PolicyReader().read(ss.str(), factory);
+    std::shared_ptr<const Policy> policy_in = PolicyReader().read(ss.str(), builder, factory);
     ifs.close();
     std::cout << "Read policy:" << std::endl;
-    std::cout << policy_in.compute_repr() << std::endl << std::endl;
-
-    std::cout << policy_in.str() << std::endl << std::endl;
+    std::cout << policy_in->compute_repr() << std::endl << std::endl;
+    std::cout << policy_in->str() << std::endl << std::endl;
     return 0;
 }
