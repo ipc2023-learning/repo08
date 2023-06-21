@@ -5,6 +5,7 @@ import os
 from learner.src.domain_data.domain_data_factory import DomainDataFactory
 from learner.src.instance_data.instance_data import InstanceData
 from learner.src.util.command import create_experiment_workspace
+from learner.src.util.file_system import remove_directory
 
 
 class InstanceDataFactory:
@@ -18,6 +19,8 @@ class InstanceDataFactory:
             # change working directory to put planner output files in correct directory
             os.chdir(instance_information.workspace)
             result = dlplan.generate_state_space(str(config.domain_filename), str(instance_information.filename), vocabulary_info, len(instance_datas), config.max_time_per_instance)
+            remove_directory(instance_information.workspace)
+            print(instance_information.workspace)
             if result.exit_code != dlplan.GeneratorExitCode.COMPLETE:
                 continue
             state_space = result.state_space

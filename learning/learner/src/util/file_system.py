@@ -1,6 +1,7 @@
 import os
 import errno
 import jsonpickle
+import shutil
 
 
 def create_directory_for_filename(filename):
@@ -12,6 +13,11 @@ def create_directory_for_filename(filename):
             if exc.errno != errno.EEXIST:
                 raise
 
+def remove_directory(directory):
+    try:
+        shutil.rmtree(directory)
+    except OSError as e:
+        print(f"Error: {e}")
 
 def write_object_to_file(filename, object):
     """ Writes json content to the given file. """
