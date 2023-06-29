@@ -131,7 +131,6 @@ PropositionalTask::PropositionalTask(
     int count_propositional_facts = 0;
     for (FactProxy fact_proxy : task_proxy.get_variables().get_facts()) {
         std::string name = fact_proxy.get_name();
-        std::cout << name << std::endl;
         if (name.substr(0, 5) == atom_prefix) {
             m_is_negated_facts.push_back(false);
             std::string normalized_name = name.substr(atom_prefix.size());
