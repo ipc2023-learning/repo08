@@ -8,19 +8,19 @@ From: ubuntu:22.04
     ## Install all necessary dependencies.
     apt-get update
     apt-get install --no-install-recommends -y \
-	    build-essential \
-		cmake \
-		python3-dev \
+        build-essential \
+        cmake \
+        python3-dev \
         python-is-python3 \
-		python3 \
-		python3-pip \
+        python3 \
+        python3-pip \
         xz-utils
 
     ## Must be installed before the other python packages
     pip install pybind11 pybind11-global
 
     ## Install python packages
-	pip install dlplan==0.2.14 \
+    pip install dlplan==0.2.14 \
         clingo==5.6.2 \
         jsonpickle==3.0.1 \
         termcolor==2.2.0 \
@@ -41,11 +41,22 @@ From: ubuntu:22.04
     cp "${PROBLEM_FILES[@]}" instances/
 
     rm -rf workspace/
-	mkdir workspace/
+    mkdir workspace/
+    echo "Created /workspace directory."
+
+    rm -rf h_policy_dk/
+    mkdir h_policy_dk/
+
+    # empty dk to allow planner to use fallback
+    tar -cJvf "$DOMAIN_KNOWLEDGE_FILE" h_policy_dk
 
     /learning/learner/main.py --domain "$DOMAIN_FILE" --task_dir instances/ --workspace workspace/
+    if [ -d workspace/output/hierarchical_sketch ]; then
+        cp -r workspace/output/hierarchical_sketch h_policy_dk/hierarchical_sketch
+    fi
 
-	tar --directory workspace/output/ -cJvf "$DOMAIN_KNOWLEDGE_FILE" hierarchical_sketch
+    # overwrite dk with learned dk
+    tar -cJvf "$DOMAIN_KNOWLEDGE_FILE" h_policy_dk
 
 %labels
 Name        Hierarchical Policy Learner

@@ -13,7 +13,8 @@ def on_model(model: Model):
 
 class ASPFactory:
     def __init__(self, max_num_rules=2):
-        self.ctl = Control(arguments=["--const", f"max_num_rules={max_num_rules}", "--parallel-mode=32", "--models=0", "--opt-mode=opt"])
+        # self.ctl = Control(arguments=["--const", f"max_num_rules={max_num_rules}", "--parallel-mode=32", "--models=0", "--opt-mode=opt"])
+        self.ctl = Control(arguments=["--const", f"max_num_rules={max_num_rules}", "--models=0", "--opt-mode=opt"])
         # features
         self.ctl.add("select", ["f"], "select(f).")  # temp
         self.ctl.add("boolean", ["b"], "boolean(b).")

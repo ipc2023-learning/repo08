@@ -36,8 +36,6 @@ class HierarchicalSketch:
         width: int,
         rule: Sketch=None):
         assert width >= 0
-        create_experiment_workspace(str(workspace_learning), rm_if_existed=False)
-        create_experiment_workspace(str(workspace_output), rm_if_existed=False)
         self.workspace_learning = workspace_learning
         self.workspace_output = workspace_output
         self.config = config
@@ -49,6 +47,8 @@ class HierarchicalSketch:
         if rule is None:
             self._initialize_goal_separating_features()
         else:
+            create_experiment_workspace(str(self.workspace_learning), rm_if_existed=False)
+            create_experiment_workspace(str(self.workspace_output), rm_if_existed=False)
             write_file(self.workspace_output / "rule_str.txt", self.rule.dlplan_policy.str())
             write_file(self.workspace_output / "rule_repr.txt", self.rule.dlplan_policy.compute_repr())
 
@@ -76,6 +76,8 @@ class HierarchicalSketch:
 
         # Learn sketch for width k-1
         self.sketch, self.sketch_minimized, self.statistics = learn_sketch(self.config, self.domain_data, self.instance_datas, self.zero_cost_domain_feature_data, self.workspace_learning, self.width - 1)
+        create_experiment_workspace(str(self.workspace_learning), rm_if_existed=False)
+        create_experiment_workspace(str(self.workspace_output), rm_if_existed=False)
         write_file(self.workspace_output / "sketch_str.txt", self.sketch.dlplan_policy.str())
         write_file(self.workspace_output / "sketch_repr.txt", self.sketch.dlplan_policy.compute_repr())
         child_zero_cost_domain_feature_data = copy.copy(self.zero_cost_domain_feature_data)
