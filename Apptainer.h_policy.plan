@@ -67,10 +67,15 @@ Stage: run
 
 	tar -xJvf "$DOMAIN_KNOWLEDGE_FILE"
 
-    /testing/planners/h-policy/downward-h-policy/h-policy.py --fd_file /testing/planners/h-policy/downward-h-policy/fast-downward.py  --domain_file "$DOMAIN_FILE" --instance_file "$PROBLEM_FILE" --hierarchical_sketch_dir hierarchical_sketch --plan_file "$PLAN_FILE"
+    if [ -e h_policy_dck/hierarchical_sketch ]; then
+	    echo "Hierarchical policy exists."
+        /testing/planners/h-policy/downward-h-policy/h-policy.py --fd_file /testing/planners/h-policy/downward-h-policy/fast-downward.py  --domain_file "$DOMAIN_FILE" --instance_file "$PROBLEM_FILE" --hierarchical_sketch_dir h_policy_dck/hierarchical_sketch --plan_file "$PLAN_FILE"
+    else
+	    echo "Hierarchical policy does not exist."
+	fi
 
     if [ -f "$PLAN_FILE" ] ; then
-		echo "Plan exists"
+		echo "Plan exists."
 	else
 		echo "Plan does not exist. Running LAMA."
 		/testing/planners/lama/fast-downward/fast-downward.py --plan-file "$PLAN_FILE" --alias lama "$DOMAIN_FILE" "$PROBLEM_FILE"

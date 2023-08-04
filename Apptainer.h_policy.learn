@@ -42,10 +42,21 @@ From: ubuntu:22.04
 
     rm -rf workspace/
 	mkdir workspace/
+    echo "Created /workspace directory."
+
+    rm -rf h_policy_dck/
+    mkdir h_policy_dck/
+
+    # empty dck to allow planner to use fallback
+    tar -cJvf "$DOMAIN_KNOWLEDGE_FILE" h_policy_dck
 
     /learning/learner/main.py --domain "$DOMAIN_FILE" --task_dir instances/ --workspace workspace/
+    if [ -d workspace/output/hierarchical_sketch ]; then
+        cp -r workspace/output/hierarchical_sketch h_policy_dck/hierarchical_sketch
+    fi
 
-	tar --directory workspace/output/ -cJvf "$DOMAIN_KNOWLEDGE_FILE" hierarchical_sketch
+    # overwrite dck with learned dck
+	tar -cJvf "$DOMAIN_KNOWLEDGE_FILE" h_policy_dck
 
 %labels
 Name        Hierarchical Policy Learner
